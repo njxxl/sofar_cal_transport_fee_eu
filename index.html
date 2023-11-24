@@ -1,26 +1,84 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Sum Calculator</title>
+  <title>Shipping Cost Calculator</title>
+  <style>
+    /* Style for the form */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    input[type="number"] {
+      width: 100px;
+      margin-bottom: 10px;
+    }
+    input[type="radio"] {
+      margin-right: 5px;
+    }
+    #result {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
-
-  <h2>Enter two numbers to find their sum:</h2>
+  <h1>Shipping Cost Calculator</h1>
+  <form id="shippingForm">
+    <label for="quantity">Quantity of Product to Send:</label>
+    <input type="number" id="quantity" min="1" required><br>
+    
+    <label for="maxPallet">Maximum Product per Pallet:</label>
+    <input type="number" id="maxPallet" min="1" required><br>
+    
+    <label>Product Type:</label>
+    <input type="radio" id="model" name="productType" value="model" required>
+    <label for="model">Model</label>
+    <input type="radio" id="accessory" name="productType" value="accessory" required>
+    <label for="accessory">Accessory</label><br>
+    
+    <label>Delivery Type:</label>
+    <input type="radio" id="selfPickup" name="deliveryType" value="selfPickup" required>
+    <label for="selfPickup">Self Pickup</label>
+    <input type="radio" id="foxDelivery" name="deliveryType" value="foxDelivery" required>
+    <label for="foxDelivery">Fox Delivery</label><br>
+    
+    <button type="button" onclick="calculateShipping()">Calculate Shipping Cost</button>
+  </form>
   
-  <input type="number" id="num1" placeholder="Enter first number">
-  <input type="number" id="num2" placeholder="Enter second number">
-  <button onclick="calculateSum()">Calculate Sum</button>
+  <div id="result"></div>
   
-  <p>Sum: <span id="result"></span></p>
-
   <script>
-    function calculateSum() {
-      var num1 = parseFloat(document.getElementById('num1').value);
-      var num2 = parseFloat(document.getElementById('num2').value);
-      var sum = num1 + num2;
-      document.getElementById('result').innerText = sum;
+    function calculateShipping() {
+      const x1 = parseInt(document.getElementById('quantity').value);
+      const x2 = parseInt(document.getElementById('maxPallet').value);
+      const productType = document.querySelector('input[name="productType"]:checked').value;
+      const deliveryType = document.querySelector('input[name="deliveryType"]:checked').value;
+      let shippingCost = 0;
+      let formula = '';
+
+      // Calculate shipping cost based on product and delivery type
+      if (productType === 'model') {
+        shippingCost = 1.65 * (x1 / x2) + 3.75 * x1 + 4.5 * ((x1 - 1) / x2 + 1) + 0.2 * ((x1 / x2) + (x1 - x2 * (x1 / x2))) + 15 + ((x1 - x2 * (x1 / x2)) / x2) * 24.5;
+        formula = `Shipping Cost Formula (Model): 1.65 * (${x1} / ${x2}) + 3.75 * ${x1} + 4.5 * ((${x1} - 1) / ${x2} + 1) + 0.2 * ((${x1} / ${x2}) + (${x1} - ${x2} * (${x1} / ${x2})))) + 15 + ((${x1} - ${x2} * (${x1} / ${x2})) / ${x2}) * 24.5`;
+      } else if (productType === 'accessory') {
+        shippingCost = 0.55 * (x1 / x2) + 4.5 * ((x1 - 1) / x2 + 1) + 0.2 * ((x1 / x2) + (x1 - x2 * (x1 / x2))) + 15 + ((x1 - x2 * (x1 / x2)) / x2) * 24.5;
+        formula = `Shipping Cost Formula (Accessory): 0.55 * (${x1} / ${x2}) + 4.5 * ((${x1} - 1) / ${x2} + 1) + 0.2 * ((${x1} / ${x2}) + (${x1} - ${x2} * (${x1} / ${x2})))) + 15 + ((${x1} - ${x2} * (${x1} / ${x2})) / ${x2}) * 24.5`;
+      }
+
+      // Additional cost for Fox Delivery
+      if (deliveryType === 'foxDelivery') {
+        shippingCost += 35 + Math.min(Math.max((x1 / x2) * 5, 35), 100);
+        formula += ` + 35 + cut((${x1} / ${x2}) * 5, 35, 100)`;
+      }
+
+      // Display the shipping cost and formula
+      const resultDiv = document.getElementById('result');
+      resultDiv.innerHTML = `Shipping Cost: $${shippingCost.toFixed(2)}<br>${formula}`;
     }
   </script>
-
 </body>
 </html>
