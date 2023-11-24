@@ -18,6 +18,13 @@
     }
     input[type="radio"] {
       margin-right: 5px;
+      /* Display radio buttons inline */
+      display: inline-block;
+    }
+    /* Ensure radio buttons are on the same line */
+    .radio-group label {
+      display: inline-block;
+      margin-right: 15px;
     }
     #result {
       margin-top: 20px;
@@ -35,16 +42,20 @@
     <input type="number" id="maxPallet" min="1" required><br>
     
     <label>Product Type:</label>
-    <input type="radio" id="model" name="productType" value="model" required>
-    <label for="model">Model</label>
-    <input type="radio" id="accessory" name="productType" value="accessory" required>
-    <label for="accessory">Accessory</label><br>
+    <div class="radio-group">
+      <input type="radio" id="model" name="productType" value="model" required>
+      <label for="model">Model</label>
+      <input type="radio" id="accessory" name="productType" value="accessory" required>
+      <label for="accessory">Accessory</label><br>
+    </div>
     
     <label>Delivery Type:</label>
-    <input type="radio" id="selfPickup" name="deliveryType" value="selfPickup" required>
-    <label for="selfPickup">Self Pickup</label>
-    <input type="radio" id="foxDelivery" name="deliveryType" value="foxDelivery" required>
-    <label for="foxDelivery">Fox Delivery</label><br>
+    <div class="radio-group">
+      <input type="radio" id="selfPickup" name="deliveryType" value="selfPickup" required>
+      <label for="selfPickup">Self Pickup</label>
+      <input type="radio" id="foxDelivery" name="deliveryType" value="foxDelivery" required>
+      <label for="foxDelivery">Fox Delivery</label><br>
+    </div>
     
     <button type="button" onclick="calculateShipping()">Calculate Shipping Cost</button>
   </form>
