@@ -80,11 +80,11 @@
 
       // Calculate shipping cost based on product and delivery type
       if (productType === 'model') {
-        shippingCost = 1.65 * (x1 / x2) + 3.75 * x1 + 4.5 * ((x1 - 1) / x2 + 1) + 0.2 * ((x1 / x2) + (x1 - x2 * (x1 / x2))) + 15 + ((x1 - x2 * (x1 / x2)) / x2) * 24.5;
-        formula = `Shipping Cost Formula (Model): 1.65 * (${x1} / ${x2}) + 3.75 * ${x1} + 4.5 * ((${x1} - 1) / ${x2} + 1) + 0.2 * ((${x1} / ${x2}) + (${x1} - ${x2} * (${x1} / ${x2})))) + 15 + isFullyDivisible(x1, x2)  * 24.5`;
+        shippingCost = 1.65 * (x1 / x2) + 3.75 * x1 + 4.5 * ((x1 - 1) / x2 + 1) + 0.2 * ((x1 / x2) + (x1 - x2 * (x1 / x2))) + 15 + isFullyDivisible(x1, x2) * 24.5;
+        formula = `Shipping Cost Formula (Model): 1.65 * (${x1} / ${x2}) + 3.75 * ${x1} + 4.5 * ((${x1} - 1) / ${x2} + 1) + 0.2 * ((${x1} / ${x2}) + (${x1} - ${x2} * (${x1} / ${x2})))) + 15 + isFullyDivisible(${x1},${x2})  * 24.5`;
       } else if (productType === 'accessory') {
-        shippingCost = 0.55 * (x1 / x2) + 4.5 * ((x1 - 1) / x2 + 1) + 0.2 * ((x1 / x2) + (x1 - x2 * (x1 / x2))) + 15 + ((x1 - x2 * (x1 / x2)) / x2) * 24.5;
-        formula = `Shipping Cost Formula (Accessory): 0.55 * (${x1} / ${x2}) + 4.5 * ((${x1} - 1) / ${x2} + 1) + 0.2 * ((${x1} / ${x2}) + (${x1} - ${x2} * (${x1} / ${x2})))) + 15 + isFullyDivisible(x1, x2) * 24.5`;
+        shippingCost = 0.55 * (x1 / x2) + 4.5 * ((x1 - 1) / x2 + 1) + 0.2 * ((x1 / x2) + (x1 - x2 * (x1 / x2))) + 15 + isFullyDivisible(x1, x2) * 24.5;
+        formula = `Shipping Cost Formula (Accessory): 0.55 * (${x1} / ${x2}) + 4.5 * ((${x1} - 1) / ${x2} + 1) + 0.2 * ((${x1} / ${x2}) + (${x1} - ${x2} * (${x1} / ${x2})))) + 15 + isFullyDivisible(${x1},${x2}) * 24.5`;
       }
 
       // Additional cost for Fox Delivery
