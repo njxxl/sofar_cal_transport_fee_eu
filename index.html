@@ -88,7 +88,7 @@
       }
 
       // Additional cost for Fox Delivery
-      if (deliveryType === 'foxDelivery') {
+      if (deliveryType === 'selfPickup') {
         shippingCost += 35 + Math.min(Math.max((x1 / x2) * 5, 35), 100);
         formula += ` + 35 + cut((${x1} / ${x2}) * 5, 35, 100)`;
       }
