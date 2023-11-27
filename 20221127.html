@@ -68,8 +68,8 @@
     function calculateShipping() {
       const modelQuantities = document.getElementById('modelQuantities').value.split(';').map(val => isNaN(parseInt(val)) ? 0 : parseInt(val));
       const accessoryQuantities = document.getElementById('accessoryQuantities').value.split(';').map(val => isNaN(parseInt(val)) ? 0 : parseInt(val));
-      const accessoryQuantityPerPallets = document.getElementById('accessoryQuantityPerPallet').value.split(';').map(val => isNaN(parseInt(val)) ? 0 : parseInt(val));
-      const maxPallets = document.getElementById('maxPallet').value.split(';').map(val => isNaN(parseInt(val)) ? 0 : parseInt(val));
+      const accessoryQuantityPerPallets = document.getElementById('accessoryQuantityPerPallet').value.split(';').map(val => isNaN(parseInt(val)) ? 1 : parseInt(val));
+      const maxPallets = document.getElementById('maxPallet').value.split(';').map(val => isNaN(parseInt(val)) ? 1 : parseInt(val));
       const deliveryType = document.querySelector('input[name="deliveryType"]:checked').value;
       let shippingCost = 0;
       let formula = '';
