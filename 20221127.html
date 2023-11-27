@@ -80,11 +80,11 @@
         const modelQuantity = modelQuantities[i];
         const maxPallet = maxPallets[i];
 
-        shippingCost += (1.65 * (modelQuantity / maxPallet) + 3.75 * modelQuantity +
+        shippingCost += (1.65 * (modelQuantity / maxPallet) + 3.75 * ((modelQuantity - 1) / maxPallet + 1)  +
           4.5 * ((modelQuantity - 1) / maxPallet + 1) + 0.2 * ((modelQuantity / maxPallet) + (modelQuantity - maxPallet * (modelQuantity / maxPallet)))) +
           15 + isFullyDivisible(modelQuantity, maxPallet) * 24.5;
         
-        formula += `Shipping Cost Formula (Model): 1.65 * (${modelQuantity} / ${maxPallet}) + 3.75 * ${modelQuantity} + 4.5 * ((${modelQuantity} - 1) / ${maxPallet} + 1) + 0.2 * ((${modelQuantity} / ${maxPallet}) + (${modelQuantity} - ${maxPallet} * (${modelQuantity} / ${maxPallet})))) + 15 + isFullyDivisible(${modelQuantity}, ${maxPallet}) * 24.5<br>`;        
+        formula += `Shipping Cost Formula (Model): 1.65 * (${modelQuantity} / ${maxPallet}) + 3.75 * ${modelQuantity} + 4.5 * ((${modelQuantity} - 1) / ${maxPallet} + 1) + 0.2 * ((${modelQuantity} / ${maxPallet}) + (${modelQuantity} - ${maxPallet} * (${modelQuantity} / ${maxPallet}))))  + isFullyDivisible(${modelQuantity}, ${maxPallet}) * 24.5<br>`;        
       }
       
       // Calculate the shipping cost for accessory
@@ -94,9 +94,9 @@
      
         shippingCost += (0.55 * (accessoryQuantity / accessoryQuantityPerPallet) +
           4.5 * ((accessoryQuantity - 1) / accessoryQuantityPerPallet + 1) +
-          0.2 * ((accessoryQuantity / accessoryQuantityPerPallet) + (accessoryQuantity - accessoryQuantityPerPallet * (accessoryQuantity / accessoryQuantityPerPallet)))) +
-          15 + isFullyDivisible(accessoryQuantity, accessoryQuantityPerPallet) * 24.5;
-        formula += `Shipping Cost Formula (Accessory): 0.55 * (${accessoryQuantity} / ${accessoryQuantityPerPallet}) + 4.5 * ((${accessoryQuantity} - 1) / ${accessoryQuantityPerPallet} + 1) + 0.2 * ((${accessoryQuantity} / ${accessoryQuantityPerPallet}) + (${accessoryQuantity} - ${accessoryQuantityPerPallet} * (${accessoryQuantity} / ${accessoryQuantityPerPallet})))) + 15 + isFullyDivisible(${accessoryQuantity}, ${accessoryQuantityPerPallet}) * 24.5<br>`;
+          0.2 * ((accessoryQuantity / accessoryQuantityPerPallet) + (accessoryQuantity - accessoryQuantityPerPallet * (accessoryQuantity / accessoryQuantityPerPallet)))) 
+         + isFullyDivisible(accessoryQuantity, accessoryQuantityPerPallet) * 24.5;
+        formula += `Shipping Cost Formula (Accessory): 0.55 * (${accessoryQuantity} / ${accessoryQuantityPerPallet}) + 4.5 * ((${accessoryQuantity} - 1) / ${accessoryQuantityPerPallet} + 1) + 0.2 * ((${accessoryQuantity} / ${accessoryQuantityPerPallet}) + (${accessoryQuantity} - ${accessoryQuantityPerPallet} * (${accessoryQuantity} / ${accessoryQuantityPerPallet}))))  + isFullyDivisible(${accessoryQuantity}, ${accessoryQuantityPerPallet}) * 24.5<br>`;
       }
 
       // Additional cost for Fox Delivery
@@ -107,7 +107,7 @@
         shippingCost += 35 + Math.min(Math.max((totalQuantity / totalMaxPallets) * 5, 35), 100);
         formula += `Additional Cost for Self Pickup: 35 + cut((${totalQuantity} / ${totalMaxPallets}) * 5, 35, 100)`;
       }
-
+      formula +=15
       // Display the shipping cost and formula
       const resultDiv = document.getElementById('result');
       resultDiv.innerHTML = `Shipping Cost: $${shippingCost.toFixed(2)}<br>${formula}`;
