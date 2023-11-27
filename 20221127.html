@@ -37,6 +37,8 @@
   <form id="shippingForm">
     <label for="modelQuantities">Model Quantities (separated by ;):</label>
     <input type="text" id="modelQuantities" required><br>
+     <label for="maxPallet">Model Quantity per Pallet (separated by ;):</label>
+    <input type="text" id="maxPallet" required><br>
 
     <label for="accessoryQuantities">Accessory Quantities (separated by ;):</label>
     <input type="text" id="accessoryQuantities" required><br>
@@ -44,8 +46,7 @@
     <label for="accessoryQuantityPerPallet">Accessory Quantity per Pallet (separated by ;):</label>
     <input type="text" id="accessoryQuantityPerPallet" required><br>
 
-    <label for="maxPallet">Maximum Product(s) per Pallet (separated by ;):</label>
-    <input type="text" id="maxPallet" required><br>
+   
 
     <label>Delivery Type:</label>
     <div class="radio-group">
@@ -77,20 +78,24 @@
       // Calculate shipping cost for models
       for (let i = 0; i < modelQuantities.length; i++) {
         const modelQuantity = modelQuantities[i];
-        const accessoryQuantity = accessoryQuantities[i];
-        const accessoryQuantityPerPallet = accessoryQuantityPerPallets[i];
         const maxPallet = maxPallets[i];
 
         shippingCost += (1.65 * (modelQuantity / maxPallet) + 3.75 * modelQuantity +
           4.5 * ((modelQuantity - 1) / maxPallet + 1) + 0.2 * ((modelQuantity / maxPallet) + (modelQuantity - maxPallet * (modelQuantity / maxPallet)))) +
           15 + isFullyDivisible(modelQuantity, maxPallet) * 24.5;
-
+        
+        formula += `Shipping Cost Formula (Model): 1.65 * (${modelQuantity} / ${maxPallet}) + 3.75 * ${modelQuantity} + 4.5 * ((${modelQuantity} - 1) / ${maxPallet} + 1) + 0.2 * ((${modelQuantity} / ${maxPallet}) + (${modelQuantity} - ${maxPallet} * (${modelQuantity} / ${maxPallet})))) + 15 + isFullyDivisible(${modelQuantity}, ${maxPallet}) * 24.5<br>`;        
+      }
+      
+      // Calculate the shipping cost for accessory
+      for (let i = 0; i < accessoryQuantities.length; i++) {
+        const accessoryQuantity = accessoryQuantities[i];
+        const accessoryQuantityPerPallet = accessoryQuantityPerPallets[i];
+     
         shippingCost += (0.55 * (accessoryQuantity / accessoryQuantityPerPallet) +
           4.5 * ((accessoryQuantity - 1) / accessoryQuantityPerPallet + 1) +
           0.2 * ((accessoryQuantity / accessoryQuantityPerPallet) + (accessoryQuantity - accessoryQuantityPerPallet * (accessoryQuantity / accessoryQuantityPerPallet)))) +
           15 + isFullyDivisible(accessoryQuantity, accessoryQuantityPerPallet) * 24.5;
-
-        formula += `Shipping Cost Formula (Model): 1.65 * (${modelQuantity} / ${maxPallet}) + 3.75 * ${modelQuantity} + 4.5 * ((${modelQuantity} - 1) / ${maxPallet} + 1) + 0.2 * ((${modelQuantity} / ${maxPallet}) + (${modelQuantity} - ${maxPallet} * (${modelQuantity} / ${maxPallet})))) + 15 + isFullyDivisible(${modelQuantity}, ${maxPallet}) * 24.5<br>`;
         formula += `Shipping Cost Formula (Accessory): 0.55 * (${accessoryQuantity} / ${accessoryQuantityPerPallet}) + 4.5 * ((${accessoryQuantity} - 1) / ${accessoryQuantityPerPallet} + 1) + 0.2 * ((${accessoryQuantity} / ${accessoryQuantityPerPallet}) + (${accessoryQuantity} - ${accessoryQuantityPerPallet} * (${accessoryQuantity} / ${accessoryQuantityPerPallet})))) + 15 + isFullyDivisible(${accessoryQuantity}, ${accessoryQuantityPerPallet}) * 24.5<br>`;
       }
 
