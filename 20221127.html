@@ -41,11 +41,11 @@
     <label for="accessoryQuantities">Accessory Quantities (separated by ;):</label>
     <input type="text" id="accessoryQuantities" required><br>
 
-    <label for="accessoryQuantityPerPallet">Accessory Quantity per Pallet:</label>
-    <input type="number" id="accessoryQuantityPerPallet" min="1" required><br>
+    <label for="accessoryQuantityPerPallet">Accessory Quantity per Pallet (separated by ;):</label>
+    <input type="text" id="accessoryQuantityPerPallet" required><br>
 
-    <label for="maxPallet">Maximum Product(s) per Pallet:</label>
-    <input type="number" id="maxPallet" min="1" required><br>
+    <label for="maxPallet">Maximum Product(s) per Pallet (separated by ;):</label>
+    <input type="text" id="maxPallet" required><br>
 
     <label>Delivery Type:</label>
     <div class="radio-group">
@@ -68,28 +68,29 @@
     function calculateShipping() {
       const modelQuantities = document.getElementById('modelQuantities').value.split(';');
       const accessoryQuantities = document.getElementById('accessoryQuantities').value.split(';');
-      const accessoryQuantityPerPallet = parseInt(document.getElementById('accessoryQuantityPerPallet').value);
-      const maxPallet = parseInt(document.getElementById('maxPallet').value);
+      const accessoryQuantityPerPallets = document.getElementById('accessoryQuantityPerPallet').value.split(';');
+      const maxPallets = document.getElementById('maxPallet').value.split(';');
       const deliveryType = document.querySelector('input[name="deliveryType"]:checked').value;
       let shippingCost = 0;
       let formula = '';
 
       // Calculate shipping cost for models
-      for (const quantity of modelQuantities) {
-        const modelQuantity = parseInt(quantity);
+      for (let i = 0; i < modelQuantities.length; i++) {
+        const modelQuantity = parseInt(modelQuantities[i]);
+        const accessoryQuantity = parseInt(accessoryQuantities[i]);
+        const accessoryQuantityPerPallet = parseInt(accessoryQuantityPerPallets[i]);
+        const maxPallet = parseInt(maxPallets[i]);
+
         shippingCost += (1.65 * (modelQuantity / maxPallet) + 3.75 * modelQuantity +
           4.5 * ((modelQuantity - 1) / maxPallet + 1) + 0.2 * ((modelQuantity / maxPallet) + (modelQuantity - maxPallet * (modelQuantity / maxPallet)))) +
           15 + isFullyDivisible(modelQuantity, maxPallet) * 24.5;
-        formula += `Shipping Cost Formula (Model): 1.65 * (${modelQuantity} / ${maxPallet}) + 3.75 * ${modelQuantity} + 4.5 * ((${modelQuantity} - 1) / ${maxPallet} + 1) + 0.2 * ((${modelQuantity} / ${maxPallet}) + (${modelQuantity} - ${maxPallet} * (${modelQuantity} / ${maxPallet})))) + 15 + isFullyDivisible(${modelQuantity}, ${maxPallet}) * 24.5<br>`;
-      }
 
-      // Calculate shipping cost for accessories
-      for (const quantity of accessoryQuantities) {
-        const accessoryQuantity = parseInt(quantity);
         shippingCost += (0.55 * (accessoryQuantity / accessoryQuantityPerPallet) +
           4.5 * ((accessoryQuantity - 1) / accessoryQuantityPerPallet + 1) +
           0.2 * ((accessoryQuantity / accessoryQuantityPerPallet) + (accessoryQuantity - accessoryQuantityPerPallet * (accessoryQuantity / accessoryQuantityPerPallet)))) +
           15 + isFullyDivisible(accessoryQuantity, accessoryQuantityPerPallet) * 24.5;
+
+        formula += `Shipping Cost Formula (Model): 1.65 * (${modelQuantity} / ${maxPallet}) + 3.75 * ${modelQuantity} + 4.5 * ((${modelQuantity} - 1) / ${maxPallet} + 1) + 0.2 * ((${modelQuantity} / ${maxPallet}) + (${modelQuantity} - ${maxPallet} * (${modelQuantity} / ${maxPallet})))) + 15 + isFullyDivisible(${modelQuantity}, ${maxPallet}) * 24.5<br>`;
         formula += `Shipping Cost Formula (Accessory): 0.55 * (${accessoryQuantity} / ${accessoryQuantityPerPallet}) + 4.5 * ((${accessoryQuantity} - 1) / ${accessoryQuantityPerPallet} + 1) + 0.2 * ((${accessoryQuantity} / ${accessoryQuantityPerPallet}) + (${accessoryQuantity} - ${accessoryQuantityPerPallet} * (${accessoryQuantity} / ${accessoryQuantityPerPallet})))) + 15 + isFullyDivisible(${accessoryQuantity}, ${accessoryQuantityPerPallet}) * 24.5<br>`;
       }
 
@@ -97,8 +98,9 @@
       if (deliveryType === 'selfPickup') {
         const totalQuantity = modelQuantities.reduce((acc, val) => acc + parseInt(val), 0) +
           accessoryQuantities.reduce((acc, val) => acc + parseInt(val), 0);
-        shippingCost += 35 + Math.min(Math.max((totalQuantity / maxPallet) * 5, 35), 100);
-        formula += `Additional Cost for Self Pickup: 35 + cut((${totalQuantity} / ${maxPallet}) * 5, 35, 100)`;
+        const totalMaxPallets = maxPallets.reduce((acc, val) => acc + parseInt(val), 0);
+        shippingCost += 35 + Math.min(Math.max((totalQuantity / totalMaxPallets) * 5, 35), 100);
+        formula += `Additional Cost for Self Pickup: 35 + cut((${totalQuantity} / ${totalMaxPallets}) * 5, 35, 100)`;
       }
 
       // Display the shipping cost and formula
