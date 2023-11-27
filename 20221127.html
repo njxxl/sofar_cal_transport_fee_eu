@@ -66,20 +66,20 @@
     }
 
     function calculateShipping() {
-      const modelQuantities = document.getElementById('modelQuantities').value.split(';');
-      const accessoryQuantities = document.getElementById('accessoryQuantities').value.split(';');
-      const accessoryQuantityPerPallets = document.getElementById('accessoryQuantityPerPallet').value.split(';');
-      const maxPallets = document.getElementById('maxPallet').value.split(';');
+      const modelQuantities = document.getElementById('modelQuantities').value.split(';').map(val => isNaN(parseInt(val)) ? 0 : parseInt(val));
+      const accessoryQuantities = document.getElementById('accessoryQuantities').value.split(';').map(val => isNaN(parseInt(val)) ? 0 : parseInt(val));
+      const accessoryQuantityPerPallets = document.getElementById('accessoryQuantityPerPallet').value.split(';').map(val => isNaN(parseInt(val)) ? 0 : parseInt(val));
+      const maxPallets = document.getElementById('maxPallet').value.split(';').map(val => isNaN(parseInt(val)) ? 0 : parseInt(val));
       const deliveryType = document.querySelector('input[name="deliveryType"]:checked').value;
       let shippingCost = 0;
       let formula = '';
 
       // Calculate shipping cost for models
       for (let i = 0; i < modelQuantities.length; i++) {
-        const modelQuantity = parseInt(modelQuantities[i]);
-        const accessoryQuantity = parseInt(accessoryQuantities[i]);
-        const accessoryQuantityPerPallet = parseInt(accessoryQuantityPerPallets[i]);
-        const maxPallet = parseInt(maxPallets[i]);
+        const modelQuantity = modelQuantities[i];
+        const accessoryQuantity = accessoryQuantities[i];
+        const accessoryQuantityPerPallet = accessoryQuantityPerPallets[i];
+        const maxPallet = maxPallets[i];
 
         shippingCost += (1.65 * (modelQuantity / maxPallet) + 3.75 * modelQuantity +
           4.5 * ((modelQuantity - 1) / maxPallet + 1) + 0.2 * ((modelQuantity / maxPallet) + (modelQuantity - maxPallet * (modelQuantity / maxPallet)))) +
@@ -96,9 +96,9 @@
 
       // Additional cost for Fox Delivery
       if (deliveryType === 'selfPickup') {
-        const totalQuantity = modelQuantities.reduce((acc, val) => acc + parseInt(val), 0) +
-          accessoryQuantities.reduce((acc, val) => acc + parseInt(val), 0);
-        const totalMaxPallets = maxPallets.reduce((acc, val) => acc + parseInt(val), 0);
+        const totalQuantity = modelQuantities.reduce((acc, val) => acc + val, 0) +
+          accessoryQuantities.reduce((acc, val) => acc + val, 0);
+        const totalMaxPallets = maxPallets.reduce((acc, val) => acc + val, 0);
         shippingCost += 35 + Math.min(Math.max((totalQuantity / totalMaxPallets) * 5, 35), 100);
         formula += `Additional Cost for Self Pickup: 35 + cut((${totalQuantity} / ${totalMaxPallets}) * 5, 35, 100)`;
       }
