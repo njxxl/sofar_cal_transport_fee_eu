@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Shipping Cost Calculator</title>
+  <style>
+    /* Style for the form */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    input[type="number"] {
+      width: 100px;
+      margin-bottom: 10px;
+    }
+    input[type="radio"] {
+      margin-right: 5px;
+      /* Display radio buttons inline */
+      display: inline-block;
+    }
+    /* Ensure radio buttons are on the same line */
+    .radio-group label {
+      display: inline-block;
+      margin-right: 15px;
+    }
+    #result {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+    .tab {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>Shipping Cost Calculator</h1>
+  <form id="shippingForm">
+    <label for="quantity">Quantity of Product(s) to Send:</label>
+    <input type="text" id="quantity" required><br>
+    
+    <label for="maxPallet">Maximum Product(s) per Pallet:</label>
+    <input type="number" id="maxPallet" min="1" required><br>
+    
+    <div>
+      <input type="radio" id="modelTab" name="productTab" value="model" required onclick="showTab('model')"> Model
+      <input type="radio" id="accessoryTab" name="productTab" value="accessory" required onclick="showTab('accessory')"> Accessory
+    </div>
+    
+    <div id="model" class="tab">
+      <label>Model Quantity:</label>
+      <input type="number" id="modelQuantity" min="1">
+    </div>
+    
+    <div id="accessory" class="tab">
+      <label>Accessory Quantity:</label>
+      <input type="number" id="accessoryQuantity" min="1">
+    </div>
+    
+    <label>Delivery Type:</label>
+    <div class="radio-group">
+      <input type="radio" id="selfPickup" name="deliveryType" value="selfPickup" required>
+      <label for="selfPickup">Self Pickup</label>
+      <input type="radio" id="foxDelivery" name="deliveryType" value="foxDelivery" required>
+      <label for="foxDelivery">Fox Delivery</label><br>
+    </div>
+    
+    <button type="button" onclick="calculateShipping()">Calculate Shipping Cost</button>
+  </form>
+  
+  <div id="result"></div>
+  
+  <script>
+    function isFullyDivisible(a, b) {
+      return a % b === 0 ? 0 : 1;
+    }
+
+    function showTab(tabName) {
+      const tabs = document.querySelectorAll('.tab');
+      tabs.forEach(tab => {
+        tab.style.display = 'none';
+      });
+      document.getElementById(tabName).style.display = 'block';
+    }
+
+    function calculateShipping() {
+      const quantityInput = document.getElementById('quantity').value.split(';');
+      const maxPallet = parseInt(document.getElementById('maxPallet').value);
+      const deliveryType = document.querySelector('input[name="deliveryType"]:checked').value;
+      let shippingCost = 0;
+      let formula = '';
+
+      const modelQuantity = document.getElementById('modelQuantity').value || 0;
+      const accessoryQuantity = document.getElementById('accessoryQuantity').value || 0;
+
+      // Calculate shipping cost based on product and delivery type
+      const calculate = (quantity, costPerUnit) => {
+        shippingCost = costPerUnit * (quantity / maxPallet) +
+          4.5 * ((quantity - 1) / maxPallet + 1) +
+          0.2 * ((quantity / maxPallet) + (quantity - maxPallet * (quantity / maxPallet))) +
+          15 + isFullyDivisible(quantity, maxPallet) * 24.5;
+        formula = `Shipping Cost Formula: ${costPerUnit} * (${quantity} / ${maxPallet}) + 4.5 * ((${quantity} - 1) / ${maxPallet} + 1) + 0.2 * ((${quantity} / ${maxPallet}) + (${quantity} - ${maxPallet} * (${quantity} / ${maxPallet})))) + 15 + isFullyDivisible(${quantity}, ${maxPallet}) * 24.5`;
+      };
+
+      if (document.getElementById('modelTab').checked) {
+        calculate(modelQuantity, 1.65);
+        shippingCost += 3.75 * modelQuantity;
+        formula += ` + 3.75 * ${modelQuantity}`;
+      } else if (document.getElementById('accessoryTab').checked) {
+        calculate(accessoryQuantity, 0.55);
+      }
+
+      // Additional cost for Fox Delivery
+      if (deliveryType === 'selfPickup') {
+        shippingCost += 35 + Math.min(Math.max((quantityInput.reduce((acc, val) => acc + parseInt(val), 0) / maxPallet) * 5, 35), 100);
+        formula += ` + 35 + cut((${quantityInput.reduce((acc, val) => acc + parseInt(val), 0)} / ${maxPallet}) * 5, 35, 100)`;
+      }
+
+      // Display the shipping cost and formula
+      const resultDiv = document.getElementById('result');
+      resultDiv.innerHTML = `Shipping Cost: $${shippingCost.toFixed(2)}<br>${formula}`;
+    }
+  </script>
+</body>
+</html>
