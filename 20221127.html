@@ -78,36 +78,29 @@
       let shippingCost = 0;
       let formula = '';
       let addPallets = 0;
-
       // Calculate shipping cost for models
       for (let i = 0; i < modelQuantities.length; i++) {
         const modelQuantity = modelQuantities[i];
         const maxPallet = maxPallets[i];
 
-        // Calculate shipping cost components for models
-        const baseCost = 1.65 * (modelQuantity / maxPallet);
-        const firstComponent = 3.75 * ((modelQuantity - 1) / maxPallet + 1);
-        const secondComponent = 4.5 * ((modelQuantity - 1) / maxPallet + 1);
-        const thirdComponent = 0.2 * ((modelQuantity / maxPallet) + (modelQuantity - maxPallet * (modelQuantity / maxPallet))));
-        shippingCost += baseCost + firstComponent + secondComponent + thirdComponent + 15;
-
-        // Display shipping cost formula for models
-        formula += `Shipping Cost Formula (Model): ${baseCost.toFixed(2)} + ${firstComponent.toFixed(2)} + ${secondComponent.toFixed(2)} + ${thirdComponent.toFixed(2)} + 15<br>`;
+        shippingCost += (1.65 * (modelQuantity / maxPallet) + 3.75 * ((modelQuantity - 1) / maxPallet + 1)  +
+          4.5 * ((modelQuantity - 1) / maxPallet + 1) + 0.2 * ((modelQuantity / maxPallet) + (modelQuantity - maxPallet * (modelQuantity / maxPallet)))) +
+          15;
+        addPallets += isFullyDivisible(modelQuantity, maxPallet);
+        formula += `Shipping Cost Formula (Model): 1.65 * (${modelQuantity} / ${maxPallet}) + 3.75 * ${modelQuantity}/${maxPallet} + 4.5 * ((${modelQuantity} - 1) / ${maxPallet} + 1) + 0.2 * ((${modelQuantity} / ${maxPallet}) + (${modelQuantity} - ${maxPallet} * (${modelQuantity} / ${maxPallet}))))  <br>`;        
       }
       
-      // Calculate the shipping cost for accessories
+      // Calculate the shipping cost for accessory
       for (let i = 0; i < accessoryQuantities.length; i++) {
         const accessoryQuantity = accessoryQuantities[i];
         const accessoryQuantityPerPallet = accessoryQuantityPerPallets[i];
-
-        // Calculate shipping cost components for accessories
-        const baseCost = 0.55 * (accessoryQuantity / accessoryQuantityPerPallet);
-        const firstComponent = 4.5 * ((accessoryQuantity - 1) / accessoryQuantityPerPallet + 1);
-        const secondComponent = 0.2 * ((accessoryQuantity / accessoryQuantityPerPallet) + (accessoryQuantity - accessoryQuantityPerPallet * (accessoryQuantity / accessoryQuantityPerPallet))));
-        shippingCost += baseCost + firstComponent + secondComponent;
-
-        // Display shipping cost formula for accessories
-        formula += `Shipping Cost Formula (Accessory): ${baseCost.toFixed(2)} + ${firstComponent.toFixed(2)} + ${secondComponent.toFixed(2)}<br>`;
+     
+        shippingCost += (0.55 * (accessoryQuantity / accessoryQuantityPerPallet) +
+          4.5 * ((accessoryQuantity - 1) / accessoryQuantityPerPallet + 1) +
+          0.2 * ((accessoryQuantity / accessoryQuantityPerPallet) + (accessoryQuantity - accessoryQuantityPerPallet * (accessoryQuantity / accessoryQuantityPerPallet)))) 
+         ;
+        addPallets += isFullyDivisible(accessoryQuantity, accessoryQuantityPerPallet);
+        formula += `Shipping Cost Formula (Accessory): 0.55 * (${accessoryQuantity} / ${accessoryQuantityPerPallet}) + 4.5 * ((${accessoryQuantity} - 1) / ${accessoryQuantityPerPallet} + 1) + 0.2 * ((${accessoryQuantity} / ${accessoryQuantityPerPallet}) + (${accessoryQuantity} - ${accessoryQuantityPerPallet} * (${accessoryQuantity} / ${accessoryQuantityPerPallet}))))<br>`;
       }
 
       // Additional cost for Fox Delivery
@@ -116,20 +109,15 @@
           accessoryQuantities.reduce((acc, val) => acc + val, 0);
         const totalMaxPallets = maxPallets.reduce((acc, val) => acc + val, 0);
         shippingCost += 35 + Math.min(Math.max((totalQuantity / totalMaxPallets) * 5, 35), 100);
-
-        // Display additional cost formula for Self Pickup
         formula += `Additional Cost for Self Pickup: 35 + cut((${totalQuantity} / ${totalMaxPallets}) * 5, 35, 100) `;
       }
-      
-      // Additional cost for pallets
-      shippingCost += Math.max(addPallets, 1) * 24.5 + 15;
-      formula += `Additional Cost for Pallets: ${addPallets} * 24.5 + 15`;
-
+      shippingCost += Math.max(addPallets,1) * 24.5
+      formula += `Additional Cost for Pallets: ${addPallets} * 24.5`;
+      formula += ` + 15`
       // Display the shipping cost and formula
       const resultDiv = document.getElementById('result');
       resultDiv.innerHTML = `Outbound Cost: €${shippingCost.toFixed(2)}<br>${formula}`;
     }
   </script>
-
 </body>
 </html>
