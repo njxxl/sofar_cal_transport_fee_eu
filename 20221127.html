@@ -135,12 +135,6 @@
         totalAccessoryShippingCost += 35 + Math.min(Math.max((totalQuantity / totalMaxPallets) * 5, 35), 100);
         accessoryFormula += deliveryFormula; // Store delivery cost formula for accessories
       }
-      
-      totalModelShippingCost += 15; // Add administration fee per order for models
-      modelFormula += `Administration fee per order: 15`;
-      
-      totalAccessoryShippingCost += 15; // Add administration fee per order for accessories
-      accessoryFormula += `Administration fee per order: 15`;
 
       totalCost = totalModelShippingCost + totalAccessoryShippingCost +15
       // Display the shipping cost and formula for models and accessories separately
