@@ -127,7 +127,7 @@
         formula += `Additional Cost for Self Pickup: 35 + cut((${totalQuantity} / ${totalMaxPallets}) * 5, 35, 100) `;
       }
       shippingCost += Math.min(addPallets,1) * 24.5
-      formula += `Additional Cost for Pallets: ${addPallets} * 24.5`;
+      formula += `Additional Cost for Pallets: ${Math.min(addPallets,1)} * 24.5`;
       formula += ` + 15`
       // Display the shipping cost and formula
       const resultDiv = document.getElementById('result');
