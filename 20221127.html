@@ -35,16 +35,23 @@
 <body>
   <h1>Shipping Cost Calculator</h1>
   <form id="shippingForm">
-    <label for="modelQuantities">Model Quantities (separated by ;):</label>
-    <input type="text" id="modelQuantities" required><br>
-     <label for="maxPallet">Model Quantity per Pallet (separated by ;):</label>
-    <input type="text" id="maxPallet" required><br>
+    <div style="display: flex; flex-wrap: wrap;">
+    <div style="flex: 1; margin-right: 10px;">
+      <label for="modelQuantities">Model Quantities (separated by ;):</label>
+      <input type="text" id="modelQuantities" required><br>
 
-    <label for="accessoryQuantities">Accessory Quantities (separated by ;):</label>
-    <input type="text" id="accessoryQuantities" required><br>
+      <label for="maxPallet">Model Quantity per Pallet (separated by ;):</label>
+      <input type="text" id="maxPallet" required><br>
+    </div>
+    
+    <div style="flex: 1;">
+      <label for="accessoryQuantities">Accessory Quantities (separated by ;):</label>
+      <input type="text" id="accessoryQuantities" required><br>
 
-    <label for="accessoryQuantityPerPallet">Accessory Quantity per Pallet (separated by ;):</label>
-    <input type="text" id="accessoryQuantityPerPallet" required><br>
+      <label for="accessoryQuantityPerPallet">Accessory Quantity per Pallet (separated by ;):</label>
+      <input type="text" id="accessoryQuantityPerPallet" required><br>
+    </div>
+  </div>
 
    
 
