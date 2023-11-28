@@ -76,6 +76,9 @@
     }
 
     function calculateShipping() {
+      const batteryQuantities = document.getElementById('batteryQuantities').value.split(';').map(val => isNaN(parseInt(val)) ? 0 : parseInt(val));
+      const batteryQuantityPerPallet = document.getElementById('batteryQuantityPerPallet').value.split(';').map(val => isNaN(parseInt(val)) ? 1 : parseInt(val));
+    
       const modelQuantities = document.getElementById('modelQuantities').value.split(';').map(val => isNaN(parseInt(val)) ? 0 : parseInt(val));
       const accessoryQuantities = document.getElementById('accessoryQuantities').value.split(';').map(val => isNaN(parseInt(val)) ? 0 : parseInt(val));
       const accessoryQuantityPerPallets = document.getElementById('accessoryQuantityPerPallet').value.split(';').map(val => isNaN(parseInt(val)) ? 1 : parseInt(val));
