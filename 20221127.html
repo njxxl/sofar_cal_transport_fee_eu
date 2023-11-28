@@ -122,8 +122,8 @@
         const accessoryShippingFormula = `Shipping Cost Formula (Accessory): 0.55 * (${accessoryQuantity} / ${accessoryQuantityPerPallet}) + 4.5 * ((${accessoryQuantity} - 1) / ${accessoryQuantityPerPallet} + 1) + 0.2 * ((${accessoryQuantity} / ${accessoryQuantityPerPallet}) + (${accessoryQuantity} - ${accessoryQuantityPerPallet} * (${accessoryQuantity} / ${accessoryQuantityPerPallet}))))  + isFullyDivisible(${accessoryQuantity}, ${accessoryQuantityPerPallet}) * 24.5 = ${individualAccessoryShippingCost}<br>`;
         accessoryFormula += accessoryShippingFormula; // Store individual accessory shipping cost formula
       }
-      const pickupCost = 0;
-      const deliveryFormula = '';
+      let  pickupCost = 0;
+      let  deliveryFormula = '';
       // Additional cost for Fox Delivery
       if (deliveryType === 'selfPickup') {
         
