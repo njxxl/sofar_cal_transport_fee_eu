@@ -86,7 +86,7 @@
         shippingCost += (1.65 * (modelQuantity / maxPallet) + 3.75 * ((modelQuantity - 1) / maxPallet + 1)  +
           4.5 * ((modelQuantity - 1) / maxPallet + 1) + 0.2 * ((modelQuantity / maxPallet) + (modelQuantity - maxPallet * (modelQuantity / maxPallet)))) +
           15;
-        addPallets += isFullyDivisible(modelQuantity, maxPallet)
+        addPallets += isFullyDivisible(modelQuantity, maxPallet);
         formula += `Shipping Cost Formula (Model): 1.65 * (${modelQuantity} / ${maxPallet}) + 3.75 * ${modelQuantity}/${maxPallet} + 4.5 * ((${modelQuantity} - 1) / ${maxPallet} + 1) + 0.2 * ((${modelQuantity} / ${maxPallet}) + (${modelQuantity} - ${maxPallet} * (${modelQuantity} / ${maxPallet}))))  <br>`;        
       }
       
@@ -99,7 +99,7 @@
           4.5 * ((accessoryQuantity - 1) / accessoryQuantityPerPallet + 1) +
           0.2 * ((accessoryQuantity / accessoryQuantityPerPallet) + (accessoryQuantity - accessoryQuantityPerPallet * (accessoryQuantity / accessoryQuantityPerPallet)))) 
          ;
-        addPallets += isFullyDivisible(modelQuantity, maxPallet)
+        addPallets += isFullyDivisible(accessoryQuantity, accessoryQuantityPerPallet);
         formula += `Shipping Cost Formula (Accessory): 0.55 * (${accessoryQuantity} / ${accessoryQuantityPerPallet}) + 4.5 * ((${accessoryQuantity} - 1) / ${accessoryQuantityPerPallet} + 1) + 0.2 * ((${accessoryQuantity} / ${accessoryQuantityPerPallet}) + (${accessoryQuantity} - ${accessoryQuantityPerPallet} * (${accessoryQuantity} / ${accessoryQuantityPerPallet}))))<br>`;
       }
 
