@@ -47,6 +47,12 @@
 
     <label for="accessoryQuantityPerPallet">Accessory Quantity per Pallet (separated by ;):</label>
     <input type="text" id="accessoryQuantityPerPallet" required>
+
+    <label for="batteryQuantities">Battery Quantities (separated by ;):</label>
+    <input type="text" id="batteryQuantities" required>
+
+    <label for="batteryQuantityPerPallet">Battery Quantity per Pallet (separated by ;):</label>
+    <input type="text" id="batteryQuantityPerPallet" required>
   </div>
 
    
@@ -88,6 +94,16 @@
           15;
         addPallets += isFullyDivisible(modelQuantity, maxPallet);
         formula += `Shipping Cost Formula (Model): 1.65 * (${modelQuantity} / ${maxPallet}) + 3.75 * ${modelQuantity}/${maxPallet} + 4.5 * ((${modelQuantity} - 1) / ${maxPallet} + 1) + 0.2 * ((${modelQuantity} / ${maxPallet}) + (${modelQuantity} - ${maxPallet} * (${modelQuantity} / ${maxPallet}))))  <br>`;        
+      }
+      for (let i = 0; i < batteryQuantities.length; i++) {
+        const bQuantity = batteryQuantities[i];
+        const bmaxPallet = batteryQuantityPerPallet[i];
+
+        shippingCost += (1.65 * (bQuantity / bmaxPallet) + 3.75 * ((bmaxPallet - 1) / bmaxPallet + 1)  +
+          4.5 * ((bQuantity - 1) / bmaxPallet + 1) + 0.2 * ((bQuantity / bmaxPallet) + (bQuantity - bmaxPallet * (bQuantity / bmaxPallet)))) +
+          15;
+        addPallets += isFullyDivisible(bQuantity, bmaxPallet);
+        formula += `Shipping Cost Formula (Battery): 1.65 * (${bQuantity} / ${bmaxPallet}) + 3.75 * ${bQuantity}/${bmaxPallet} + 4.5 * ((${bQuantity} - 1) / ${bmaxPallet} + 1) + 0.2 * ((${bQuantity} / ${bmaxPallet}) + (${bQuantity} - ${bmaxPallet} * (${bQuantity} / ${bmaxPallet}))))  <br>`;        
       }
       
       // Calculate the shipping cost for accessory
