@@ -128,10 +128,10 @@
       if (deliveryType === 'selfPickup') {
         
         pickupCost += 35 + Math.min(Math.max((1) * 5, 35), 100);
-        deliveryFormula = `Additional Cost for Self Pickup: 35 + cut((${totalQuantity} / ${totalMaxPallets}) * 5, 35, 100)`;
+        deliveryFormula += `Additional Cost for Self Pickup: 35 + cut((${totalQuantity} / ${totalMaxPallets}) * 5, 35, 100)`;
       }
 
-      totalCost = totalModelShippingCost + totalAccessoryShippingCost + pickupCost +15
+      totalCost += totalModelShippingCost + totalAccessoryShippingCost + pickupCost +15
       // Display the shipping cost and formula for models and accessories separately
       const resultDiv = document.getElementById('result');
       resultDiv.innerHTML = `<span style="color: red;">Total Cost: ${totalCost} </span><br><br>${deliveryFormula}<br>Model Shipping Cost: $${totalModelShippingCost.toFixed(2)}<br>${modelFormula}<br>Accessory Shipping Cost: $${totalAccessoryShippingCost.toFixed(2)}<br>${accessoryFormula}`;
