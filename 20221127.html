@@ -96,11 +96,10 @@
         const accessoryQuantityPerPallet = accessoryQuantityPerPallets[i];
      
         shippingCost += (0.55 * (accessoryQuantity / accessoryQuantityPerPallet) +
-          4.5 * ((accessoryQuantity - 1) / accessoryQuantityPerPallet + 1) +
           0.2 * ((accessoryQuantity / accessoryQuantityPerPallet) + (accessoryQuantity - accessoryQuantityPerPallet * (accessoryQuantity / accessoryQuantityPerPallet)))) 
          ;
         addPallets += isFullyDivisible(accessoryQuantity, accessoryQuantityPerPallet);
-        formula += `Shipping Cost Formula (Accessory): 0.55 * (${accessoryQuantity} / ${accessoryQuantityPerPallet}) + 4.5 * ((${accessoryQuantity} - 1) / ${accessoryQuantityPerPallet} + 1) + 0.2 * ((${accessoryQuantity} / ${accessoryQuantityPerPallet}) + (${accessoryQuantity} - ${accessoryQuantityPerPallet} * (${accessoryQuantity} / ${accessoryQuantityPerPallet}))))<br>`;
+        formula += `Shipping Cost Formula (Accessory): 0.55 * (${accessoryQuantity} / ${accessoryQuantityPerPallet}) + 0.2 * ((${accessoryQuantity} / ${accessoryQuantityPerPallet}) + (${accessoryQuantity} - ${accessoryQuantityPerPallet} * (${accessoryQuantity} / ${accessoryQuantityPerPallet}))))<br>`;
       }
 
       // Additional cost for Fox Delivery
