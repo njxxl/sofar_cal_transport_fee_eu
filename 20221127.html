@@ -76,16 +76,20 @@
       const maxPallets = document.getElementById('maxPallet').value.split(';').map(val => isNaN(parseInt(val)) ? 1 : parseInt(val));
       const deliveryType = document.querySelector('input[name="deliveryType"]:checked').value;
       let shippingCost = 0;
+      let totalCost = 0;
+      let totalCostFormula = '';
       let formula = '';
 
       let totalModelShippingCost = 0; // Variable to accumulate individual model shipping costs
       let modelFormula = ''; // Variable to store the model shipping cost formulas
-      
+
+      let modelPalletsNo = 0;
+      let accPalletsNo = 0;
       // Calculate shipping cost for models
       for (let i = 0; i < modelQuantities.length; i++) {
         const modelQuantity = modelQuantities[i];
         const maxPallet = maxPallets[i];
-      
+        modelPalletsNo+=Math.ceil(modelQuantity / maxPallet)
         const individualModelShippingCost = (
           1.65 * (modelQuantity / maxPallet) +
           3.75 * (Math.ceil(modelQuantity / maxPallet)) +
@@ -108,7 +112,7 @@
       for (let i = 0; i < accessoryQuantities.length; i++) {
         const accessoryQuantity = accessoryQuantities[i];
         const accessoryQuantityPerPallet = accessoryQuantityPerPallets[i];
-      
+        accPalletsNo+=Math.ceil(accessoryQuantity / accessoryQuantityPerPallet)
         const individualAccessoryShippingCost = (
           0.55 * (accessoryQuantity / accessoryQuantityPerPallet) +
           4.5 * ((accessoryQuantity - 1) / accessoryQuantityPerPallet + 1) +
@@ -125,21 +129,16 @@
       
       // Additional cost for Fox Delivery
       if (deliveryType === 'selfPickup') {
-        const totalQuantity = modelQuantities.reduce((acc, val) => acc + val, 0) +
-          accessoryQuantities.reduce((acc, val) => acc + val, 0);
-        const totalMaxPallets = maxPallets.reduce((acc, val) => acc + val, 0);
-        totalModelShippingCost += 35 + Math.min(Math.max((totalQuantity / totalMaxPallets) * 5, 35), 100);
+        
+        totalModelShippingCost += Math.min(Math.max((modelPalletsNo+accPalletsNo) * 5, 35), 100);
         const deliveryFormula = `Additional Cost for Self Pickup: 35 + cut((${totalQuantity} / ${totalMaxPallets}) * 5, 35, 100)`;
-        modelFormula += deliveryFormula; // Store delivery cost formula for models
-      
-        totalAccessoryShippingCost += 35 + Math.min(Math.max((totalQuantity / totalMaxPallets) * 5, 35), 100);
-        accessoryFormula += deliveryFormula; // Store delivery cost formula for accessories
+        
       }
 
-      totalCost = totalModelShippingCost + totalAccessoryShippingCost +15
+      totalCost += totalModelShippingCost + totalAccessoryShippingCost +15
       // Display the shipping cost and formula for models and accessories separately
       const resultDiv = document.getElementById('result');
-      resultDiv.innerHTML = `<span style="color: red;">Total Cost: ${totalCost} </span><br><br> Model Shipping Cost: $${totalModelShippingCost.toFixed(2)}<br>${modelFormula}<br>Accessory Shipping Cost: $${totalAccessoryShippingCost.toFixed(2)}<br>${accessoryFormula}`;
+      resultDiv.innerHTML = `<span style="color: red;">Total Cost: ${totalCost} </span><br><br> ${deliveryFormula}<br> Model Shipping Cost: $${totalModelShippingCost.toFixed(2)}<br>${modelFormula}<br>Accessory Shipping Cost: $${totalAccessoryShippingCost.toFixed(2)}<br>${accessoryFormula}`;
 
     }
   </script>
