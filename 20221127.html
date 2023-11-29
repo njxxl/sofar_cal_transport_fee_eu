@@ -36,22 +36,22 @@
   <h1>Outbound Cost Calculator</h1>
   <form id="shippingForm">
     <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
-    <label for="modelQuantities">Model Quantities (separated by ;):</label>
+    <label for="modelQuantities">普货 Model Quantities (separated by ;):</label>
     <input type="text" id="modelQuantities" required>
 
-    <label for="maxPallet">Model Quantity per Pallet (separated by ;):</label>
+    <label for="maxPallet">普货 Model Quantity per Pallet (separated by ;):</label>
     <input type="text" id="maxPallet" required>
 
-    <label for="accessoryQuantities">Accessory Quantities (separated by ;):</label>
+    <label for="accessoryQuantities">配件 Accessory Quantities (separated by ;):</label>
     <input type="text" id="accessoryQuantities" required>
 
-    <label for="accessoryQuantityPerPallet">Accessory Quantity per Pallet (separated by ;):</label>
+    <label for="accessoryQuantityPerPallet">配件 Accessory Quantity per Pallet (separated by ;):</label>
     <input type="text" id="accessoryQuantityPerPallet" required>
 
-    <label for="batteryQuantities">Battery Quantities (separated by ;):</label>
+    <label for="batteryQuantities">电池 Battery Quantities (separated by ;):</label>
     <input type="text" id="batteryQuantities" required>
 
-    <label for="batteryQuantityPerPallet">Battery Quantity per Pallet (separated by ;):</label>
+    <label for="batteryQuantityPerPallet">电池 Battery Quantity per Pallet (separated by ;):</label>
     <input type="text" id="batteryQuantityPerPallet" required>
   </div>
 
@@ -92,19 +92,19 @@
         const modelQuantity = modelQuantities[i];
         const maxPallet = maxPallets[i];
 
-        shippingCost += (0.55 * (modelQuantity / maxPallet) + 3.75 * ((modelQuantity - 1) / maxPallet + 1)  +
+        shippingCost += (1.65 * (modelQuantity / maxPallet) + 0.55 * (modelQuantity - maxPallet * (modelQuantity / maxPallet)) +
           4.5 * ((modelQuantity - 1) / maxPallet + 1) + 0.2 * ((modelQuantity / maxPallet) + (modelQuantity - maxPallet * (modelQuantity / maxPallet)))) ;
         addPallets += isFullyDivisible(modelQuantity, maxPallet);
-        formula += `Shipping Cost Formula (Model): 0.55 * (${modelQuantity} / ${maxPallet}) + 3.75 * ${modelQuantity}/${maxPallet} + 4.5 * ((${modelQuantity} - 1) / ${maxPallet} + 1) + 0.2 * ((${modelQuantity} / ${maxPallet}) + (${modelQuantity} - ${maxPallet} * (${modelQuantity} / ${maxPallet}))))  <br>`;        
+        formula += `Shipping Cost Formula (Model): 1.65 * (${modelQuantity} / ${maxPallet}) + 0.55 * RES ${modelQuantity}/${maxPallet} + 4.5 * ((${modelQuantity} - 1) / ${maxPallet} + 1) + 0.2 * ((${modelQuantity} / ${maxPallet}) + (${modelQuantity} - ${maxPallet} * (${modelQuantity} / ${maxPallet}))))  <br>`;        
       }
       for (let i = 0; i < batteryQuantities.length; i++) {
         const bQuantity = batteryQuantities[i];
         const bmaxPallet = batteryQuantityPerPallet[i];
 
-        shippingCost += (1.65 * (bQuantity / bmaxPallet) + 3.75 * ((bmaxPallet - 1) / bmaxPallet + 1)  +
+        shippingCost += (1.65 * (bQuantity / bmaxPallet) + 3.75 *  (bQuantity - bmaxPallet * (bQuantity / bmaxPallet))  +
           4.5 * ((bQuantity - 1) / bmaxPallet + 1) + 0.2 * ((bQuantity / bmaxPallet) + (bQuantity - bmaxPallet * (bQuantity / bmaxPallet)))) ;
         addPallets += isFullyDivisible(bQuantity, bmaxPallet);
-        formula += `Shipping Cost Formula (Battery): 1.65 * (${bQuantity} / ${bmaxPallet}) + 3.75 * ${bQuantity}/${bmaxPallet} + 4.5 * ((${bQuantity} - 1) / ${bmaxPallet} + 1) + 0.2 * ((${bQuantity} / ${bmaxPallet}) + (${bQuantity} - ${bmaxPallet} * (${bQuantity} / ${bmaxPallet}))))  <br>`;        
+        formula += `Shipping Cost Formula (Battery): 1.65 * (${bQuantity} / ${bmaxPallet}) + 3.75 * RES ${bQuantity}/${bmaxPallet} + 4.5 * ((${bQuantity} - 1) / ${bmaxPallet} + 1) + 0.2 * ((${bQuantity} / ${bmaxPallet}) + (${bQuantity} - ${bmaxPallet} * (${bQuantity} / ${bmaxPallet}))))  <br>`;        
       }
       
       // Calculate the shipping cost for accessory
@@ -124,7 +124,10 @@
         const totalQuantity = modelQuantities.reduce((acc, val) => acc + val, 0) +
           accessoryQuantities.reduce((acc, val) => acc + val, 0);
         const totalMaxPallets = maxPallets.reduce((acc, val) => acc + val, 0);
-        shippingCost += 35 + Math.min(Math.max((totalQuantity / totalMaxPallets) * 5, 35), 100);
+        if (batteryQuantities !== 0) {
+          shippingCost += 35;
+        }
+        shippingCost += Math.min(Math.max((totalQuantity / totalMaxPallets) * 5, 35), 100);
         formula += `Additional Cost for Self Pickup: 35 + cut((${totalQuantity} / ${totalMaxPallets}) * 5, 35, 100) `;
       }
       shippingCost += Math.min(addPallets,1) * 24.5 + 15;
