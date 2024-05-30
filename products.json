@@ -1,9 +1,20 @@
 [
-  {
-    "productModel": "ESI 3K-S1",
-    "battery": "930.00400002-0",
-    "accessory": "900030100004",
-    "meter": "901.00000054-0"
-  },
-  // Other product entries...
+    {
+        "productModel": "ESI 3K-S1",
+        "battery": "930.00400002-0",
+        "accessory": "900030100004",
+        "meter": "901.00000054-0"
+    },
+    {
+        "productModel": "ABC 2000",
+        "battery": "123.45678901-0",
+        "accessory": "9876543210",
+        "meter": "555.66666666-0"
+    },
+    {
+        "productModel": "XYZ 500",
+        "battery": "789.01234567-0",
+        "accessory": "1357902468",
+        "meter": "333.44444444-0"
+    }
 ]
